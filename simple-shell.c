@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <signal.h>
 #include <stdlib.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
 
 #define SHELL_PROMPT "\x1b[32m\x1b[1mosh>\x1b[0m "
 
@@ -32,6 +36,12 @@ int main(){
 
   while(1){
     print_current_working_directory();
+
+    is_running = 0;
+    char* command = readline(SHELL_PROMPT);
+    is_running = 1;
+
+    break;
   }
 }
 
