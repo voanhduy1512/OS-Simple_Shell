@@ -13,10 +13,26 @@ void handler(int signal){
     fputs(SHELL_PROMPT, stdout);
 }
 
+char* get_current_working_directory(){
+  return getcwd(NULL, 1024);
+}
+
+void print_current_working_directory(){
+  char* current_working_directory = get_current_working_directory();
+  
+  fputs("\x1b[34m", stdout);
+  fputs(current_working_directory, stdout);
+  fputs("\x1B[0m\n", stdout);
+  
+  free(current_working_directory);
+}
+
 int main(){
   signal(SIGINT, handler);
 
-  
+  while(1){
+    print_current_working_directory();
+  }
 }
 
 
