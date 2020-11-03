@@ -1,6 +1,6 @@
-all: shell.c
-	gcc -Wall -O2 -o shell shell.c -lreadline
+all: simple-shell.c
+	gcc -Wall -O2 -o simple-shell simple-shell.c -lreadline
 run:
-	./shell
+	./simple-shell
 clean:
-	rm shell
+	rm simple-shell
