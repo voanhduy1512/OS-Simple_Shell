@@ -35,27 +35,32 @@ char* push_back(char* string, int* string_length, char new_char){
 }
 
 int get_first_index_which_not_space(char* string){
-  int it = 0;
-  while (string[it] == ' ') it++;
-  return it;
+  int index = 0;
+  while (string[index] == ' ') index++;
+  return index;
 }
 
 char* remove_useless_space(char* string){
   char* new_string = NULL;
 
   int it_string = get_first_index_which_not_space(string);
-  int it_new_string = 0;
-  
+  int current_new_string_length = 0;
 
   for (; string[it_string]; it_string++){
-    if (it_new_string == 0)
-      new_string = push_back(new_string, &it_new_string, string[it_string]);
+    if (current_new_string_length == 0)
+      new_string = push_back(new_string, &current_new_string_length, string[it_string]);
     else{
-      if (string[it_string - 1] == ' ' && string[it_string] == ' ') continue;
+      //Skip when "<space><space>".
+      if (string[it_string - 1] == ' ' && string[it_string] == ' ')
+	continue;
+
+      //When it is "<space><not space>", add space.
       if (string[it_string - 1] == ' ' && string[it_string] != ' ')
-	new_string = push_back(new_string, &it_new_string, ' ');
+	new_string = push_back(new_string, &current_new_string_length, ' ');
+
+      //When current char is not string, add it.
       if (string[it_string] != ' ')
-	new_string = push_back(new_string, &it_new_string, string[it_string]);
+	new_string = push_back(new_string, &current_new_string_length, string[it_string]);
     }
   }
   
@@ -64,6 +69,21 @@ char* remove_useless_space(char* string){
 
 int is_exit_command(char* user_command){
   return (strcmp(user_command, "exit") == 0);
+}
+
+int is_execute_previous_command_command(char* user_command){
+  return (strcmp(user_command, "!!") == 0);
+}
+
+char* get_previous_command(){
+  if (history_length == 0)
+    return NULL;
+  else
+    return history_get(history_length)->line;
+}
+
+void error_handle_empty_history(){
+  fputs("No commands in history\n", stdout);
 }
 
 int main(){
@@ -75,7 +95,21 @@ int main(){
     user_command = remove_useless_space(user_command);
 
     if (is_exit_command(user_command) == 1) break;
+    if (is_execute_previous_command_command(user_command) == 1){
+      user_command = get_previous_command();
+      
+      if (user_command == NULL){
+	error_handle_empty_history();
+	free(user_command);
+	continue;
+      }
+      else{
+	fputs(user_command, stdout);
+	fputs("\n", stdout);
+      }
+    }
+
+    
   }
 }
-
 
