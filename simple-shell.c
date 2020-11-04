@@ -34,12 +34,18 @@ char* push_back(char* string, int* string_length, char new_char){
   return result;
 }
 
+int get_first_index_which_not_space(char* string){
+  int it = 0;
+  while (string[it] == ' ') it++;
+  return it;
+}
+
 char* remove_useless_space(char* string){
   char* new_string = NULL;
 
-  int it_string = 0;
+  int it_string = get_first_index_which_not_space(string);
   int it_new_string = 0;
-  while (string[it_string] == ' ') it_string++;
+  
 
   for (; string[it_string]; it_string++){
     if (it_new_string == 0)
