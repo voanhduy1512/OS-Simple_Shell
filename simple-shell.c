@@ -34,7 +34,7 @@ char* push_back(char* string, int* string_length, char new_char){
   return result;
 }
 
-char* standardize(char* string){
+char* remove_useless_space(char* string){
   char* new_string = NULL;
 
   int it_string = 0;
@@ -46,14 +46,10 @@ char* standardize(char* string){
       new_string = push_back(new_string, &it_new_string, string[it_string]);
     else{
       if (string[it_string - 1] == ' ' && string[it_string] == ' ') continue;
-      else
-	if (string[it_string - 1] == ' ' && string[it_string] != ' '){
-	  new_string = push_back(new_string, &it_new_string, ' ');
-	  new_string = push_back(new_string, &it_new_string, string[it_string]);
-	}
-	else
-	  if (string[it_string - 1] != ' ' && string[it_string] != ' ')
-	    new_string = push_back(new_string, &it_new_string, string[it_string]);
+      if (string[it_string - 1] == ' ' && string[it_string] != ' ')
+	new_string = push_back(new_string, &it_new_string, ' ');
+      if (string[it_string] != ' ')
+	new_string = push_back(new_string, &it_new_string, string[it_string]);
     }
   }
   
@@ -70,8 +66,7 @@ int main(){
   while(is_running){
     print_current_working_directory();
     char* user_command = get_user_command();
-    user_command = standardize(user_command);
-    fputs(user_command, stdout);
+    user_command = remove_useless_space(user_command);
 
     if (is_exit_command(user_command) == 1) break;
   }
