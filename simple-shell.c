@@ -5,6 +5,9 @@
 #include <readline/history.h>
 #include <string.h>
 
+#include "command.h"
+
+//SHELL_PROMPT = "osh> " with green and bold text and a normal white space
 #define SHELL_PROMPT "\x1b[32m\x1b[1mosh>\x1b[0m "
 
 char* get_current_working_directory(){
@@ -13,15 +16,17 @@ char* get_current_working_directory(){
 
 void print_current_working_directory(){
   char* current_working_directory = get_current_working_directory();
-  
-  fputs("\x1b[34m\x1b[1m", stdout);
+
+  //Print current working directory with blue and bold text
+  fputs("\x1b[36m\x1b[1m", stdout);
   fputs(current_working_directory, stdout);
-  fputs("\x1B[0m\n", stdout);
+  fputs("\x1b[0m\n", stdout);
   
   free(current_working_directory);
 }
 
 char* get_user_command(){
+  //Print SHELL_PROMPT then readline.
   return readline(SHELL_PROMPT);
 }
 
@@ -86,6 +91,15 @@ void error_handle_empty_history(){
   fputs("No commands in history\n", stdout);
 }
 
+void respond_about_previous_command(char* previous_command){
+  if (previous_command == NULL)
+    error_handle_empty_history();
+  else{
+    fputs(previous_command, stdout);
+    fputs("\n", stdout);
+  }
+}
+
 int main(){
   int is_running = 1;
   
@@ -95,21 +109,25 @@ int main(){
     user_command = remove_useless_space(user_command);
 
     if (is_exit_command(user_command) == 1) break;
+    
     if (is_execute_previous_command_command(user_command) == 1){
-      user_command = get_previous_command();
+      char* previous_command = get_previous_command();
+      respond_about_previous_command(previous_command);
       
-      if (user_command == NULL){
-	error_handle_empty_history();
+      if (previous_command == NULL){
+	free(previous_command);
 	free(user_command);
 	continue;
       }
       else{
-	fputs(user_command, stdout);
-	fputs("\n", stdout);
+	user_command = previous_command;
+	free(previous_command);
       }
     }
 
     
+    
+    free(user_command);
   }
 }
 
