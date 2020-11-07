@@ -5,7 +5,7 @@
 #include <readline/history.h>
 #include <string.h>
 
-#include "command.h"
+#include "basic_command.h"
 
 //SHELL_PROMPT = "osh> " with green and bold text and a normal white space
 #define SHELL_PROMPT "\x1b[32m\x1b[1mosh>\x1b[0m "
@@ -101,7 +101,7 @@ void respond_about_previous_command(char* previous_command){
 }
 
 void parse_and_execute_command(char* command){
-  struct basic_command_list basic_commands = parse_basic_command_list(command);
+  struct basic_command_list basic_commands = parse_command_to_basic_command_list(command);
 
   if (basic_commands.command_count > 0){
     execute_basic_command_list(basic_commands);
