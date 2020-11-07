@@ -88,7 +88,7 @@ char* get_previous_command(){
 }
 
 void error_handle_empty_history(){
-  fputs("No commands in history\n", stdout);
+  fputs("No commands in history.\n", stdout);
 }
 
 void respond_about_previous_command(char* previous_command){
@@ -97,6 +97,15 @@ void respond_about_previous_command(char* previous_command){
   else{
     fputs(previous_command, stdout);
     fputs("\n", stdout);
+  }
+}
+
+void parse_and_execute_command(char* command){
+  struct basic_command_list basic_commands = parse_basic_command_list(command);
+
+  if (basic_commands.command_count > 0){
+    execute_basic_command_list(basic_commands);
+    free_basic_command_list(basic_commands);
   }
 }
 
@@ -123,6 +132,8 @@ int main(){
     }
 
     add_history(user_command);
+    
+    parse_and_execute_command(user_command);
     
     free(user_command);
   }

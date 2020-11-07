@@ -16,16 +16,16 @@ struct command{
 
 static const struct command NULL_COMMAND = {0, NULL, 0, {NULL, NULL}, 0};
 
-struct command_list{
+struct basic_command_list{
   int command_count;
-  struct command *commands;
+  struct command* basic_command;
   char* arg;
 };
 
-static const struct command_list NULL_COMMAND_LIST = {0, NULL, NULL};
+static const struct basic_command_list NULL_BASIC_COMMAND_LIST = {0, NULL, NULL};
 
-void free_command(struct command_list commands);
-int execute_command(struct command_list commands);
-struct command_list parse_commands(const char* user_command);
+void free_basic_command_list(struct basic_command_list basic_commands);
+int execute_basic_command_list(struct basic_command_list basic_commands);
+struct basic_command_list parse_basic_command_list(const char* command);
 
 #endif //COMMAND_HEADER
