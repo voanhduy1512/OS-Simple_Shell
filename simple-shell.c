@@ -84,7 +84,7 @@ char* get_previous_command(){
   if (history_length == 0)
     return NULL;
   else
-    return history_get(history_length)->line;
+    return (char*)history_get(history_length)->line;
 }
 
 void error_handle_empty_history(){
@@ -115,19 +115,18 @@ int main(){
       respond_about_previous_command(previous_command);
       
       if (previous_command == NULL){
-	free(previous_command);
 	free(user_command);
 	continue;
       }
-      else{
+      else
 	user_command = previous_command;
-	free(previous_command);
-      }
     }
 
-    
+    add_history(user_command);
     
     free(user_command);
   }
+
+  return 0;
 }
 
