@@ -39,7 +39,7 @@ void extend_basic_command(struct basic_command* basic_command){
     for (i = basic_command->argc; i > 1; --i)
       basic_command->argv[i] = basic_command->argv[i - 1];
     
-    basic_command->argv[1] = "--color";
+    basic_command->argv[1] = "-G";
   }
 }
 
