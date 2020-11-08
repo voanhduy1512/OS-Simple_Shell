@@ -30,19 +30,6 @@ int cd(char **argv) {
   return res;
 }
 
-void extend_basic_command(struct basic_command* basic_command){
-  if (strcmp(basic_command->argv[0], "ls") == 0 || strcmp(basic_command->argv[0], "grep") == 0){
-    ++basic_command->argc;
-    basic_command->argv = realloc(basic_command->argv, (basic_command->argc + 1) * sizeof(char*));
-
-    int i;
-    for (i = basic_command->argc; i > 1; --i)
-      basic_command->argv[i] = basic_command->argv[i - 1];
-    
-    basic_command->argv[1] = "-G";
-  }
-}
-
 pid_t execute_basic_command(char **argv, const int fd[2])
 {
   if (strcmp(argv[0], "cd") == 0) {
@@ -163,7 +150,6 @@ int execute_basic_command_list(struct basic_command_list basic_commands) {
     if (basic_command->pipe && pipe_next(current_fd, next_fd) < 0)
       return -1;
 
-    extend_basic_command(basic_command);
     process_id[i] = execute_basic_command(basic_command->argv, current_fd);
 
     if (!basic_command->pipe && !basic_command->async && process_id[i] >= 0)
