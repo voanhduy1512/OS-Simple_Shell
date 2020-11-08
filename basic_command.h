@@ -33,4 +33,6 @@ struct basic_command_list parse_command_to_basic_command_list(const char* comman
 
 void add_arg_to_basic_command(struct basic_command basic_command, char* arg);
 
+void add_basic_command_to_list(struct basic_command_list basic_commands, struct basic_command basic_command);
+
 #endif //COMMAND_HEADER

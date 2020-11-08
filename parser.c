@@ -145,10 +145,8 @@ struct basic_command_list parse_command_to_basic_command_list(const char* comman
 
       basic_command.argv[basic_command.argc] = NULL;
 
-      result.command_count++;
-      result.basic_command = realloc(result.basic_command, result.command_count * sizeof(struct basic_command_list));
-      result.basic_command[result.command_count - 1] = basic_command;
-
+      add_basic_command_to_list(result, basic_command);
+      
       basic_command = NULL_BASIC_COMMAND;
     }
   } while (command_copy[start_position] != '\0');
