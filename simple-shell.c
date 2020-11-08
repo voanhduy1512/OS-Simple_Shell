@@ -134,7 +134,7 @@ int main(){
     add_history(user_command);
     
     parse_and_execute_command(user_command);
-    
+
     free(user_command);
   }
 

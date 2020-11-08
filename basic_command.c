@@ -12,7 +12,7 @@ void free_basic_command(struct basic_command* basic_command){
 void free_basic_command_list(struct basic_command_list* basic_commands){
   int i;
   for (i = 0; i < basic_commands->command_count; i++)
-    free_basic_command(&basic_commands->basic_command[i]);
+    free_basic_command(basic_commands->basic_command + i);
 
   free(basic_commands->basic_command);
 }

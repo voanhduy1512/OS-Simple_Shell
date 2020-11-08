@@ -58,21 +58,21 @@ int split_part(char* command, int* start_position){
   return is_string;
 }
 
-char* get_file_name(char* command, int* start_position){
-  int start_position_copy = *start_position;
-  split_part(command, start_position);
-  return command + start_position_copy;
-}
-
-int is_end_position_of_command(char* command, int pos){
-  return (command[pos] == '\0');
-}
-
 char* copy_string(const char* source){
   char* copy_string = malloc((strlen(source) + 1) * sizeof(char));
   strcpy(copy_string, source);
   copy_string[strlen(source)] = '\0';
   return copy_string;
+}
+
+char* get_file_name(char* command, int* start_position){
+  int start_position_copy = *start_position;
+  split_part(command, start_position);
+  return copy_string(command + start_position_copy);
+}
+
+int is_end_position_of_command(char* command, int pos){
+  return (command[pos] == '\0');
 }
 
 struct basic_command_list parse_command_to_basic_command_list(const char* command){

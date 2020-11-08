@@ -139,7 +139,7 @@ int execute_basic_command_list(struct basic_command_list basic_commands) {
 
   int i;
   for (i = 0; i < basic_commands.command_count; ++i) {
-    struct basic_command *basic_command = basic_commands.basic_command + i;
+    struct basic_command* basic_command = basic_commands.basic_command + i;
     
     if (basic_command->file_name[0] && redir_in(current_fd, basic_command->file_name[0]) < 0)
       return -1;
