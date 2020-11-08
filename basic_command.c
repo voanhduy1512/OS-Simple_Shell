@@ -14,7 +14,6 @@ void free_basic_command_list(struct basic_command_list basic_commands){
     free_basic_command(basic_commands.basic_command[i]);
 
   free(basic_commands.basic_command);
-  free(basic_commands.arg);
 }
 
 void add_arg_to_basic_command(struct basic_command basic_command, char* arg){

@@ -64,20 +64,24 @@ char* get_file_name(char* command, int* start_position){
   return command + start_position_copy;
 }
 
+int is_end_position_of_command(char* command, int pos){
+  return (command[pos] == '\0');
+}
+
+char* copy_string(const char* source){
+  char* copy_string = malloc((strlen(source) + 1) * sizeof(char));
+  strcpy(copy_string, source);
+  copy_string[strlen(source)] = '\0';
+  return copy_string;
+}
+
 struct basic_command_list parse_command_to_basic_command_list(const char* command){
-  char* command_copy = malloc((strlen(command) + 1) * sizeof(char));
-  strcpy(command_copy, command);
-
+  char* command_copy = copy_string(command);
   struct basic_command_list result = NULL_BASIC_COMMAND_LIST;
-  result.arg = (char*)command_copy;
-
-  if (command_copy[0] == '\0'){
-    free(command_copy);
-    free_basic_command_list(result);
-    return NULL_BASIC_COMMAND_LIST;
-  }
-
   struct basic_command basic_command = NULL_BASIC_COMMAND;
+
+  if (command_copy[0] == '\0')
+    goto error_free_all_and_return_null;
 
   int start_position;
   int end_position = 0;
@@ -91,11 +95,7 @@ struct basic_command_list parse_command_to_basic_command_list(const char* comman
     //Error when split
     if (split_part_return == -1){
       fputs("Error: missing closing \".\n", stderr);
-      
-      free(command_copy);
-      free_basic_command(basic_command);
-      free_basic_command_list(result);
-      return NULL_BASIC_COMMAND_LIST;
+      goto error_free_all_and_return_null;
     }
 
     //is_arg = 1 if current split part is string (usually string will be an argument)
@@ -104,30 +104,26 @@ struct basic_command_list parse_command_to_basic_command_list(const char* comman
     int is_not_string = !split_part_return;
     int is_done = 0;
 
-    if (command_copy[start_position] == '\0') //End of command
+    if (is_end_position_of_command(command_copy, start_position))
       is_done = 1;
     else 
-      //If not string part
       if (is_not_string){
 	if (command_copy[start_position] == '|'){
 	  basic_command.pipe = 1;
 	  is_done = 1;
 	}
 	
-	else  
-	if (command_copy[start_position] == '&')
+	else if (command_copy[start_position] == '&')
 	  basic_command.async = 1;
 	
-	else
-	if (command_copy[start_position] == '<')
+	else if (command_copy[start_position] == '<')
 	  basic_command.file_name[0] = get_file_name(command_copy, &end_position);
 	
-	else  
-	if (command_copy[start_position] == '>')
+	else if (command_copy[start_position] == '>')
 	  basic_command.file_name[1] = get_file_name(command_copy, &end_position);
-	
-	else //If not in any special case then it is an argument.
-	  is_arg = 1;
+
+	//If not in any special case then it is an argument.
+	else is_arg = 1;
       }
 
     if (is_arg)
@@ -136,23 +132,23 @@ struct basic_command_list parse_command_to_basic_command_list(const char* comman
     if (is_done){
       if (basic_command.argc == 0){
 	fputs("Error : Command with no argument.\n", stderr);
-	
-	free(command_copy);
-	free_basic_command(basic_command);
-	free_basic_command_list(result);
-	return NULL_BASIC_COMMAND_LIST;
+	goto error_free_all_and_return_null;
       }
 
       basic_command.argv[basic_command.argc] = NULL;
-
       add_basic_command_to_list(result, basic_command);
-      
       basic_command = NULL_BASIC_COMMAND;
     }
-  } while (command_copy[start_position] != '\0');
+  } while (!is_end_position_of_command(command_copy, start_position));
 
   free(command_copy);
   free_basic_command(basic_command);
 
   return result;
+
+ error_free_all_and_return_null:
+  free(command_copy);
+  free_basic_command(basic_command);
+  free_basic_command_list(result);
+  return NULL_BASIC_COMMAND_LIST;
 }

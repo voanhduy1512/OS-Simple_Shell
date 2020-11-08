@@ -19,10 +19,9 @@ static const struct basic_command NULL_BASIC_COMMAND = {0, NULL, 0, {NULL, NULL}
 struct basic_command_list{
   int command_count;
   struct basic_command* basic_command;
-  char* arg;
 };
 
-static const struct basic_command_list NULL_BASIC_COMMAND_LIST = {0, NULL, NULL};
+static const struct basic_command_list NULL_BASIC_COMMAND_LIST = {0, NULL};
 
 void free_basic_command(struct basic_command basic_command);
 void free_basic_command_list(struct basic_command_list basic_commands);
