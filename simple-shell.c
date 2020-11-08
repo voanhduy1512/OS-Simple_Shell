@@ -103,10 +103,10 @@ void respond_about_previous_command(char* previous_command){
 void parse_and_execute_command(char* command){
   struct basic_command_list basic_commands = parse_command_to_basic_command_list(command);
 
-  if (basic_commands.command_count > 0){
+  if (basic_commands.command_count > 0)
     execute_basic_command_list(basic_commands);
-    free_basic_command_list(basic_commands);
-  }
+
+  free_basic_command_list(basic_commands);
 }
 
 int main(){
