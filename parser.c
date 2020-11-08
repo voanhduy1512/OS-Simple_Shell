@@ -127,7 +127,7 @@ struct basic_command_list parse_command_to_basic_command_list(const char* comman
       }
 
     if (is_arg)
-      add_arg_to_basic_command(basic_command, command_copy + start_position);
+      add_arg_to_basic_command(&basic_command, command_copy + start_position);
 
     if (is_done){
       if (basic_command.argc == 0){
@@ -136,19 +136,19 @@ struct basic_command_list parse_command_to_basic_command_list(const char* comman
       }
 
       basic_command.argv[basic_command.argc] = NULL;
-      add_basic_command_to_list(result, basic_command);
+      add_basic_command_to_list(&result, basic_command);
       basic_command = NULL_BASIC_COMMAND;
     }
   } while (!is_end_position_of_command(command_copy, start_position));
 
   free(command_copy);
-  free_basic_command(basic_command);
+  free_basic_command(&basic_command);
 
   return result;
 
  error_free_all_and_return_null:
   free(command_copy);
-  free_basic_command(basic_command);
-  free_basic_command_list(result);
+  free_basic_command(&basic_command);
+  free_basic_command_list(&result);
   return NULL_BASIC_COMMAND_LIST;
 }

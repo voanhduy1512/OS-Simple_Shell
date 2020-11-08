@@ -106,7 +106,7 @@ void parse_and_execute_command(char* command){
   if (basic_commands.command_count > 0)
     execute_basic_command_list(basic_commands);
 
-  free_basic_command_list(basic_commands);
+  free_basic_command_list(&basic_commands);
 }
 
 int main(){
